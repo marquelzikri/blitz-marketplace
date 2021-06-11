@@ -4,10 +4,15 @@ import db from "db"
 export default async function getCurrentUser(_ = null, { session }: Ctx) {
   if (!session.userId) return null
 
+  let roles
   const user = await db.user.findFirst({
     where: { id: session.userId },
-    select: { id: true, name: true, email: true, role: true },
+    select: { id: true, name: true, email: true, memberships: true },
   })
 
-  return user
+  if (user) {
+    roles = user.memberships.map(membership => membership.role)
+  }
+
+  return { ...user, ...{ roles } }
 }
