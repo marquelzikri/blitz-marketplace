@@ -1,9 +1,25 @@
-import { resolver, SecurePassword } from "blitz"
+import { resolver, SecurePassword, AuthenticationError } from 'blitz';
 import db from "db"
 import { Signup } from "app/auth/validations"
 
 export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, ctx) => {
   const hashedPassword = await SecurePassword.hash(password.trim())
+  /**
+   * By default, user's membership is your marketplace name.
+   * After the user finished their signup process, they can
+   * add a membership as an OWNER of their own store.
+   */
+  const storeName = process.env.STORE_NAME || "blitz-commerce"
+  const organization = await db.organization.findFirst({
+    where: {
+      name: storeName
+    },
+    select: { id: true, role: true }
+  })
+  if (organization == null) {
+    throw new AuthenticationError("Application error: Organization not found")
+  }
+
   const user = await db.user.create({
     data: {
       email: email.toLowerCase().trim(),
@@ -14,11 +30,11 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
           organization: {
             connectOrCreate: {
               create: {
-                name: "<Put organization name here>",
+                name: storeName,
                 role: "CUSTOMER",
               },
               where: {
-                id: 0
+                id: organization.id
               }
             },
           },
@@ -27,16 +43,14 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
     },
     select: { id: true, name: true, email: true, memberships: true },
   })
-  const organization = await db.organization.findUnique({
-    where: {
-      id: user.memberships[0]?.organizationId
-    }
-  })
+  if (!user.memberships[0]) {
+    throw new AuthenticationError("Application error: There's some mistakes on user creation process")
+  }
 
   await ctx.session.$create({
     userId: user.id,
-    roles: [user.memberships[0]!.role, organization!.role],
-    orgId: user.memberships[0]!.organizationId,
+    roles: [user.memberships[0].role, organization.role],
+    orgId: user.memberships[0].organizationId,
   })
   return user
 })
