@@ -25,14 +25,17 @@ describe("resetPassword mutation", () => {
     past.setHours(past.getHours() - 4)
 
     const storeName = process.env.STORE_NAME || "blitz-commerce"
-    const organization = await db.organization.findFirst({
+    let organization = await db.organization.findFirst({
       where: {
         name: storeName,
       },
       select: { id: true, role: true },
     })
     if (organization == null) {
-      throw new AuthenticationError("Application error: Organization not found")
+      organization = {
+        id: 0,
+        role: "CUSTOMER",
+      }
     }
 
     const user = await db.user.create({
