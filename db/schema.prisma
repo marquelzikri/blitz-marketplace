@@ -13,18 +13,12 @@ generator client {
 // --------------------------------------
 
 model Organization {
-  id   Int        @id @default(autoincrement())
-  name String
-  role GlobalRole
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String?
 
   membership Membership[]
   products   Product[]
-}
-
-// The owners of the SaaS (you) can have a SUPERADMIN role to access all data
-enum GlobalRole {
-  SUPERADMIN
-  CUSTOMER
 }
 
 model Membership {
@@ -36,6 +30,8 @@ model Membership {
 
   user   User? @relation(fields: [userId], references: [id])
   userId Int?
+
+  isDefault Boolean
 
   // When the user joins, we will clear out the name and email and set the user.
   invitedName  String?
@@ -110,7 +106,7 @@ model Product {
 
   sku         String // SKU Agregator
   title       String
-  description String
+  description String?
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int

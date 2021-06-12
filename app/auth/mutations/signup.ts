@@ -1,4 +1,4 @@
-import { resolver, SecurePassword, AuthenticationError } from 'blitz';
+import { resolver, SecurePassword, AuthenticationError } from "blitz"
 import db from "db"
 import { Signup } from "app/auth/validations"
 
@@ -10,14 +10,18 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
    * add a membership as an OWNER of their own store.
    */
   const storeName = process.env.STORE_NAME || "blitz-commerce"
-  const organization = await db.organization.findFirst({
+  let organization = await db.organization.findFirst({
     where: {
-      name: storeName
+      name: storeName,
     },
-    select: { id: true, role: true }
+    select: { id: true },
   })
   if (organization == null) {
-    throw new AuthenticationError("Application error: Organization not found")
+    organization = await db.organization.create({
+      data: {
+        name: storeName,
+      },
+    })
   }
 
   const user = await db.user.create({
@@ -27,15 +31,10 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
       memberships: {
         create: {
           role: "USER",
+          isDefault: false,
           organization: {
-            connectOrCreate: {
-              create: {
-                name: storeName,
-                role: "CUSTOMER",
-              },
-              where: {
-                id: organization.id
-              }
+            connect: {
+              id: organization.id,
             },
           },
         },
@@ -44,13 +43,18 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
     select: { id: true, name: true, email: true, memberships: true },
   })
   if (!user.memberships[0]) {
-    throw new AuthenticationError("Application error: There's some mistakes on user creation process")
+    throw new AuthenticationError(
+      "Application error: There's some mistakes on user creation process"
+    )
   }
+
+  const roles = user.memberships.map((membership) => membership.role)
+  const orgIds = user.memberships.map((membership) => membership.organizationId)
 
   await ctx.session.$create({
     userId: user.id,
-    roles: [user.memberships[0].role, organization.role],
-    orgId: user.memberships[0].organizationId,
+    roles,
+    orgIds,
   })
   return user
 })
