@@ -1,6 +1,6 @@
 import resetPassword from "./resetPassword"
 import db from "db"
-import { hash256, SecurePassword } from "blitz"
+import { hash256, SecurePassword, AuthenticationError } from "blitz"
 
 beforeEach(async () => {
   await db.$reset()
@@ -24,6 +24,17 @@ describe("resetPassword mutation", () => {
     const past = new Date()
     past.setHours(past.getHours() - 4)
 
+    const storeName = process.env.STORE_NAME || "blitz-commerce"
+    const organization = await db.organization.findFirst({
+      where: {
+        name: storeName,
+      },
+      select: { id: true, role: true },
+    })
+    if (organization == null) {
+      throw new AuthenticationError("Application error: Organization not found")
+    }
+
     const user = await db.user.create({
       data: {
         email: "user@example.com",
@@ -35,12 +46,44 @@ describe("resetPassword mutation", () => {
               hashedToken: hash256(expiredToken),
               expiresAt: past,
               sentTo: "user@example.com",
+              memberships: {
+                create: {
+                  role: "USER",
+                  organization: {
+                    connectOrCreate: {
+                      create: {
+                        name: storeName,
+                        role: "CUSTOMER",
+                      },
+                      where: {
+                        id: organization.id,
+                      },
+                    },
+                  },
+                },
+              },
             },
             {
               type: "RESET_PASSWORD",
               hashedToken: hash256(goodToken),
               expiresAt: future,
               sentTo: "user@example.com",
+              memberships: {
+                create: {
+                  role: "USER",
+                  organization: {
+                    connectOrCreate: {
+                      create: {
+                        name: storeName,
+                        role: "CUSTOMER",
+                      },
+                      where: {
+                        id: organization.id,
+                      },
+                    },
+                  },
+                },
+              },
             },
           ],
         },
