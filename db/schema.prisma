@@ -111,6 +111,8 @@ model Product {
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int
 
+  categories Category[]
+
   variants Variant[]
 }
 
@@ -149,4 +151,19 @@ model Rating {
 
   rate    Float
   comment String
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String
+
+  parent   Category @relation(fields: [parentId], references: [id])
+  parentId Int
+
+  Category Category[] @relation("CategoryToCategory")
+
+  products Product[]
 }
