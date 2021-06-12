@@ -29,6 +29,7 @@
     "@types/react": "17.0.11",
     "autoprefixer": "10",
     "blitz": "0.37.0",
+    "classnames": "2.3.1",
     "eslint": "7.28.0",
     "final-form": "4.20.2",
     "husky": "6.0.0",
@@ -43,6 +44,8 @@
     "react-dom": "0.0.0-experimental-0eea57724",
     "react-error-boundary": "3.1.3",
     "react-final-form": "6.5.3",
+    "react-multi-carousel": "2.6.3",
+    "react-responsive-carousel": "3.2.18",
     "tailwindcss": "2.1.2",
     "typescript": "~4.2",
     "zod": "3.1.0"
