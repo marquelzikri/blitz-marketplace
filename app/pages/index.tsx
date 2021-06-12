@@ -1,59 +1,11 @@
-import { Suspense } from "react"
-import { Link, BlitzPage, useMutation, Routes } from "blitz"
+import { BlitzPage } from "blitz"
 import Layout from "app/core/layouts/Layout"
-import { useCurrentUser } from "app/core/hooks/useCurrentUser"
-import logout from "app/auth/mutations/logout"
 
 import NavHeader from "../components/NavHeader"
 import BrandHeader from "../components/BrandHeader"
 import Footer from "../components/Footer"
 import Banner from "../components/Banner"
 import HorizontalProducts from "../components/HorizontalProducts"
-
-/*
- * This file is just for a pleasant getting started page for your new app.
- * You can delete everything in here and start from scratch if you like.
- */
-
-const UserInfo = () => {
-  const currentUser = useCurrentUser()
-  const [logoutMutation] = useMutation(logout)
-
-  if (currentUser) {
-    return (
-      <>
-        <button
-          className="button small"
-          onClick={async () => {
-            await logoutMutation()
-          }}
-        >
-          Logout
-        </button>
-        <div>
-          User id: <code>{currentUser.id}</code>
-          <br />
-          User roles: <code>{currentUser.roles}</code>
-        </div>
-      </>
-    )
-  } else {
-    return (
-      <>
-        <Link href={Routes.SignupPage()}>
-          <a className="button small">
-            <strong>Sign Up</strong>
-          </a>
-        </Link>
-        <Link href={Routes.LoginPage()}>
-          <a className="button small">
-            <strong>Login</strong>
-          </a>
-        </Link>
-      </>
-    )
-  }
-}
 
 const Home: BlitzPage = () => {
   return (
@@ -66,9 +18,6 @@ const Home: BlitzPage = () => {
       <NavHeader />
       <BrandHeader />
       <Banner />
-      {/* <Suspense fallback="Loading...">
-        <UserInfo />
-      </Suspense> */}
 
       <section className="flex justify-center w-screen mt-6">
         <div className="w-full max-w-5xl px-4 sm:p-0">

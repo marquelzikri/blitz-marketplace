@@ -1,3 +1,8 @@
+import { Suspense } from "react"
+import { Link, useMutation, Routes } from "blitz"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import logout from "app/auth/mutations/logout"
+
 function BrandHeader() {
   return (
     <div className="flex justify-center w-screen text-xs p-3 sm:py-8">
@@ -32,7 +37,12 @@ function BrandHeader() {
           <img className="object-contain" src="/logo.png" alt="Brand" />
         </div>
         <ul className="inline-flex justify-end order-2 sm:order-3 my-4 sm:m-0 text-gray-700">
-          <li className="flex flex-col justify-center mr-6 uppercase">Log in / Register</li>
+          {/* <li className="flex flex-col justify-center mr-6 uppercase">Log in / Register</li> */}
+          <Suspense fallback="Loading...">
+            <li className="flex flex-col justify-center mr-6 uppercase">
+              <UserInfo />
+            </li>
+          </Suspense>
           <li className="flex flex-col justify-center">
             <button className="flex justify-center">
               <BagIcon />
@@ -56,6 +66,47 @@ function BagIcon() {
       />
     </svg>
   )
+}
+
+function UserInfo() {
+  const currentUser = useCurrentUser()
+  const [logoutMutation] = useMutation(logout)
+
+  if (currentUser) {
+    return (
+      <>
+        <button
+          className="button small"
+          onClick={async () => {
+            await logoutMutation()
+          }}
+        >
+          Logout
+        </button>
+        <div>
+          User id: <code>{currentUser.id}</code>
+          <br />
+          User roles: <code>{currentUser.roles}</code>
+        </div>
+      </>
+    )
+  } else {
+    return (
+      <section className="flex">
+        <Link href={Routes.LoginPage()}>
+          <a className="button small">
+            <strong>Login</strong>
+          </a>
+        </Link>
+        <strong className="mx-2">/</strong>
+        <Link href={Routes.SignupPage()}>
+          <a className="button small">
+            <strong>Sign Up</strong>
+          </a>
+        </Link>
+      </section>
+    )
+  }
 }
 
 export default BrandHeader
