@@ -31,7 +31,10 @@ model Membership {
   user   User? @relation(fields: [userId], references: [id])
   userId Int?
 
-  isDefault Boolean
+  isDefault Boolean // user can have maximum 2 memberships (1 from global & 1 for their own store)
+
+  defaultAddress Address? @relation(fields: [addressId], references: [id])
+  addressId      Int?
 
   // When the user joins, we will clear out the name and email and set the user.
   invitedName  String?
@@ -55,9 +58,10 @@ model User {
   hashedPassword String?
   memberships    Membership[]
 
-  tokens   Token[]
-  sessions Session[]
-  ratings  Rating[]
+  tokens    Token[]
+  sessions  Session[]
+  ratings   Rating[]
+  addresses Address[]
 }
 
 model Session {
@@ -104,7 +108,8 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  sku         String // SKU Agregator
+  sku         String
+  // SKU Agregator
   title       String
   description String?
 
@@ -124,7 +129,8 @@ model Variant {
   product   Product @relation(fields: [productId], references: [id])
   productId Int
 
-  sku String // SKU variant
+  sku String
+  // SKU variant
 
   color String
 
@@ -166,4 +172,23 @@ model Category {
   Category Category[] @relation("CategoryToCategory")
 
   products Product[]
+}
+
+model Address {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title      String
+  detail     String
+  country    String
+  City       String
+  District   String
+  Street     String
+  postalCode String
+
+  User   User? @relation(fields: [userId], references: [id])
+  userId Int?
+
+  Membership Membership[]
 }
