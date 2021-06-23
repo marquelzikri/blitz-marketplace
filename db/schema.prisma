@@ -182,9 +182,9 @@ model Address {
   title      String
   detail     String
   country    String
-  City       String
-  District   String
-  Street     String
+  city       String
+  district   String
+  street     String
   postalCode String
 
   User   User? @relation(fields: [userId], references: [id])

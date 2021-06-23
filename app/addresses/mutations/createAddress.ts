@@ -1,17 +1,8 @@
 import getCurrentUser from "app/users/queries/getCurrentUser"
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
-import { z } from "zod"
 
-const CreateAddress = z.object({
-  title: z.string(),
-  detail: z.string(),
-  country: z.string(),
-  City: z.string(),
-  District: z.string(),
-  Street: z.string(),
-  postalCode: z.string(),
-})
+import { CreateAddress } from "../validations"
 
 export default resolver.pipe(
   resolver.zod(CreateAddress),
@@ -20,7 +11,9 @@ export default resolver.pipe(
     const user = await getCurrentUser(null, ctx)
     if (!user || user.memberships.length < 1) throw new AuthenticationError()
 
-    const address = await db.address.create({ data: { ...input, ...{ User: user } } })
+    const address = await db.address.create({
+      data: { ...input, ...{ User: { connect: { id: user.id } } } },
+    })
 
     return address
   }
