@@ -1,5 +1,5 @@
 import getCurrentUser from "app/users/queries/getCurrentUser"
-import { AuthenticationError, resolver } from "blitz"
+import { AuthenticationError, AuthorizationError, resolver } from "blitz"
 import db from "db"
 
 import { UpdateAddress } from "../validations"
@@ -11,8 +11,10 @@ export default resolver.pipe(
     const user = await getCurrentUser(null, ctx)
     if (!user || user.memberships.length < 1) throw new AuthenticationError()
 
-    const address = await db.address.updateMany({ where: { id, userId: user.id }, data })
+    const address = await db.address.findUnique({ where: { id } })
+    if (!address) throw new Error("Address not found")
+    if (address?.userId !== user.id) throw new AuthorizationError("You don't own this product")
 
-    return address
+    return await db.address.update({ where: { id: address.id }, data })
   }
 )
