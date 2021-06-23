@@ -1,18 +1,8 @@
 import getCurrentUser from "app/users/queries/getCurrentUser"
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
-import { z } from "zod"
 
-const UpdateAddress = z.object({
-  id: z.number(),
-  title: z.string(),
-  detail: z.string(),
-  country: z.string(),
-  City: z.string(),
-  District: z.string(),
-  Street: z.string(),
-  postalCode: z.string(),
-})
+import { UpdateAddress } from "../validations"
 
 export default resolver.pipe(
   resolver.zod(UpdateAddress),

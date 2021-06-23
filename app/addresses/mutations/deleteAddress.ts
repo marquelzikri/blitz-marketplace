@@ -1,11 +1,8 @@
 import getCurrentUser from "app/users/queries/getCurrentUser"
 import { AuthenticationError, resolver } from "blitz"
 import db from "db"
-import { z } from "zod"
 
-const DeleteAddress = z.object({
-  id: z.number(),
-})
+import { DeleteAddress } from "../validations"
 
 export default resolver.pipe(
   resolver.zod(DeleteAddress),
