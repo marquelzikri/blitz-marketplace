@@ -31,7 +31,8 @@ model Membership {
   user   User? @relation(fields: [userId], references: [id])
   userId Int?
 
-  isDefault Boolean // user can have maximum 2 memberships (1 from global & 1 for their own store)
+  isDefault Boolean
+  // user can have maximum 2 memberships (1 from global & 1 for their own store)
 
   defaultAddress Address? @relation(fields: [addressId], references: [id])
   addressId      Int?
