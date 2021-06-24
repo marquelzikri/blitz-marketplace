@@ -2,7 +2,7 @@ import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 
 import Layout from "app/core/layouts/Layout"
 import createAddress from "app/addresses/mutations/createAddress"
-import { AddressForm, FORM_ERROR } from "app/addresses/components/AddressForm"
+import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { CreateAddress } from "app/addresses/validations"
 
 const NewAddressPage: BlitzPage = () => {
@@ -13,13 +13,13 @@ const NewAddressPage: BlitzPage = () => {
     <div>
       <h1>Create New Address</h1>
 
-      <AddressForm
+      <ZodForm
         submitText="Create Address"
         schema={CreateAddress}
         onSubmit={async (values) => {
           try {
             const address = await createAddressMutation(values)
-            router.push(`/addresses/${address.id}`)
+            router.push(Routes.ShowAddressPage({ addressId: address.id }))
           } catch (error) {
             console.error(error)
             return {

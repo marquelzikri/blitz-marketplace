@@ -3,7 +3,7 @@ import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Rout
 import Layout from "app/core/layouts/Layout"
 import getAddress from "app/addresses/queries/getAddress"
 import updateAddress from "app/addresses/mutations/updateAddress"
-import { AddressForm, FORM_ERROR } from "app/addresses/components/AddressForm"
+import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { UpdateAddress } from "app/addresses/validations"
 
 export const EditAddress = () => {
@@ -21,7 +21,7 @@ export const EditAddress = () => {
       <div>
         <h1>Edit Address: {address.title}</h1>
 
-        <AddressForm
+        <ZodForm
           submitText="Update Address"
           schema={UpdateAddress}
           initialValues={address}
