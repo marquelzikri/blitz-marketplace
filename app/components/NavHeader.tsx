@@ -51,8 +51,8 @@ function NavHeader() {
         background: "#F4F4F4",
       }}
     >
-      <div className="relative p-0 sm:py-5 w-full max-w-6xl">
-        <button className="sm:hidden p-3" onClick={handleMenuClick}>
+      <div className="relative w-full max-w-6xl p-0 sm:py-5">
+        <button className="p-3 sm:hidden" onClick={handleMenuClick}>
           <MenuIcon />
         </button>
         <nav
@@ -64,7 +64,7 @@ function NavHeader() {
           {navMenuList.map((menu, index) => (
             <a
               key={index}
-              className="p-5 sm:py-0 text-xs roboto font-medium uppercase"
+              className="p-5 text-xs font-medium uppercase sm:py-0 roboto"
               href={menu.route}
             >
               {menu.label}

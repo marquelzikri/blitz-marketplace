@@ -5,20 +5,20 @@ import logout from "app/auth/mutations/logout"
 
 function BrandHeader() {
   return (
-    <div className="flex justify-center w-screen text-xs p-3 sm:py-8">
-      <nav className="flex flex-col sm:flex-row justify-between w-full max-w-5xl">
-        <ul className="inline-flex flex-row-reverse sm:flex-row order-3 sm:order-1">
+    <div className="flex justify-center w-screen p-3 text-xs sm:py-8">
+      <nav className="flex flex-col justify-between w-full max-w-5xl sm:flex-row">
+        <ul className="inline-flex flex-row-reverse order-3 sm:flex-row sm:order-1">
           <li className="flex flex-col justify-center">
             <div className="relative">
               <select
-                className="block appearance-none border bg-white border-gray-400 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                className="block px-4 py-2 pr-8 leading-tight text-gray-700 bg-white border border-gray-400 rounded appearance-none focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state"
               >
                 <option className="">IDR</option>
               </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <div className="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 pointer-events-none">
                 <svg
-                  className="fill-current h-4 w-4"
+                  className="w-4 h-4 fill-current"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 20 20"
                 >
@@ -27,16 +27,16 @@ function BrandHeader() {
               </div>
             </div>
           </li>
-          <li className="mx-4 flex">
+          <li className="flex mx-4">
             <button className="uppercase">Bahasa</button>
             <span className="flex flex-col justify-center mx-2 text-lg">{" - "}</span>
             <button className="font-bold uppercase">English</button>
           </li>
         </ul>
-        <div className="h-10 sm:h-full order-1 sm:order-2 flex justify-center">
+        <div className="flex justify-center order-1 h-10 sm:h-full sm:order-2">
           <img className="object-contain" src="/logo.png" alt="Brand" />
         </div>
-        <ul className="inline-flex justify-end order-2 sm:order-3 my-4 sm:m-0 text-gray-700">
+        <ul className="inline-flex justify-end order-2 my-4 text-gray-700 sm:order-3 sm:m-0">
           {/* <li className="flex flex-col justify-center mr-6 uppercase">Log in / Register</li> */}
           <Suspense fallback="Loading...">
             <li className="flex flex-col justify-center mr-6 uppercase">
@@ -46,7 +46,7 @@ function BrandHeader() {
           <li className="flex flex-col justify-center">
             <button className="flex justify-center">
               <BagIcon />
-              <span className="flex flex-col h-full justify-center ml-2">0</span>
+              <span className="flex flex-col justify-center h-full ml-2">0</span>
             </button>
           </li>
         </ul>

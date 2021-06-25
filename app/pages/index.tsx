@@ -21,7 +21,7 @@ const Home: BlitzPage = () => {
 
       <section className="flex justify-center w-screen mt-6">
         <div className="w-full max-w-5xl px-4 sm:p-0">
-          <section className="gap-6 grid grid-rows-3 sm:grid-rows-none sm:grid-cols-3">
+          <section className="grid grid-rows-3 gap-6 sm:grid-rows-none sm:grid-cols-3">
             <img src="https://picsum.photos/400" alt="Lorem Picsum" />
             <img src="https://picsum.photos/400" alt="Lorem Picsum" />
             <img src="https://picsum.photos/400" alt="Lorem Picsum" />
@@ -47,7 +47,7 @@ const Home: BlitzPage = () => {
           <hr className="mt-12" />
 
           <section className="my-12">
-            <h3 className="font-bold text-sm uppercase">
+            <h3 className="text-sm font-bold uppercase">
               Koleksi lengkap fashion dari brand-brand terbaik
             </h3>
             <p className="my-4 text-xs font-semibold">
@@ -57,7 +57,7 @@ const Home: BlitzPage = () => {
               arcu. Phasellus et mi nunc. Phasellus dolor mauris, bibendum et justo non, faucibus
               eleifend tellus. Vivamus sit amet quam ac dui viverra finibus.
             </p>
-            <h3 className="font-bold text-sm uppercase">Belanja fashion di Mavelin Indonesia</h3>
+            <h3 className="text-sm font-bold uppercase">Belanja fashion di Mavelin Indonesia</h3>
             <p className="my-4 text-xs font-semibold">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce tincidunt feugiat
               vestibulum. Donec vel tempor dolor. Sed varius pellentesque urna sed viverra. Morbi

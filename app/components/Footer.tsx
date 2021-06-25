@@ -10,11 +10,11 @@ function Footer() {
 
 function NavSection() {
   return (
-    <section className="flex justify-center w-full mt-16 sm:my-16 text-gray-700">
-      <div className="flex flex-col sm:flex-row justify-between max-w-5xl w-full mx-4 xl:mx-0">
-        <article className="w-full sm:w-1/3 px-4 sm:mt-12 sm:m-0 sm:p-0 order-2 sm:order-1">
-          <img className="w-48 object-cover" src="/logo.png" alt="Brand" />
-          <p className="text-sm my-4">
+    <section className="flex justify-center w-full mt-16 text-gray-700 sm:my-16">
+      <div className="flex flex-col justify-between w-full max-w-5xl mx-4 sm:flex-row xl:mx-0">
+        <article className="order-2 w-full px-4 sm:w-1/3 sm:mt-12 sm:m-0 sm:p-0 sm:order-1">
+          <img className="object-cover w-48" src="/logo.png" alt="Brand" />
+          <p className="my-4 text-sm">
             Mavelin is a Wordpress E-Commerce theme focused to collecting, grouping your content
             Then selling your stuffs. It is perfect for small-to-high traffic e-commerce bussiness
             site.
@@ -24,7 +24,7 @@ function NavSection() {
           </small>
         </article>
 
-        <section className="grid grid-rows-3 sm:grid-rows-none sm:grid-cols-3 gap-8 w-full sm:w-1/2 px-4 sm:p-0 order-1 sm:order-2">
+        <section className="grid order-1 w-full grid-rows-3 gap-8 px-4 sm:grid-rows-none sm:grid-cols-3 sm:w-1/2 sm:p-0 sm:order-2">
           <FooterNavList
             title="Categories"
             routes={[
@@ -176,32 +176,32 @@ function ImagesSection() {
   return (
     <section className="flex justify-center w-full overflow-y-scroll sm:overflow-y-hidden">
       <img
-        className="w-1/2 sm:w-1/6 object-cover"
+        className="object-cover w-1/2 sm:w-1/6"
         src="https://picsum.photos/400"
         alt="Footer thumbnail item"
       />
       <img
-        className="w-1/2 sm:w-1/6 object-cover"
+        className="object-cover w-1/2 sm:w-1/6"
         src="https://picsum.photos/400"
         alt="Footer thumbnail item"
       />
       <img
-        className="w-1/2 sm:w-1/6 object-cover"
+        className="object-cover w-1/2 sm:w-1/6"
         src="https://picsum.photos/400"
         alt="Footer thumbnail item"
       />
       <img
-        className="w-1/2 sm:w-1/6 object-cover"
+        className="object-cover w-1/2 sm:w-1/6"
         src="https://picsum.photos/400"
         alt="Footer thumbnail item"
       />
       <img
-        className="w-1/2 sm:w-1/6 object-cover"
+        className="object-cover w-1/2 sm:w-1/6"
         src="https://picsum.photos/400"
         alt="Footer thumbnail item"
       />
       <img
-        className="w-1/2 sm:w-1/6 object-cover"
+        className="object-cover w-1/2 sm:w-1/6"
         src="https://picsum.photos/400"
         alt="Footer thumbnail item"
       />
@@ -217,31 +217,31 @@ function SocialSection() {
         background: "#F4F4F4",
       }}
     >
-      <section className="flex flex-col sm:flex-row justify-between w-full max-w-3xl mx-4 xl:mx-0">
-        <section className="flex justify-center text-gray-700 order-2 sm:order-1 mt-8 sm:m-0">
-          <button className="flex flex-col justify-center fill-current h-full mx-2">
+      <section className="flex flex-col justify-between w-full max-w-3xl mx-4 sm:flex-row xl:mx-0">
+        <section className="flex justify-center order-2 mt-8 text-gray-700 sm:order-1 sm:m-0">
+          <button className="flex flex-col justify-center h-full mx-2 fill-current">
             <FacebookIcon />
           </button>
-          <button className="flex flex-col justify-center fill-current h-full mx-2">
+          <button className="flex flex-col justify-center h-full mx-2 fill-current">
             <TwitterIcon />
           </button>
-          <button className="flex flex-col justify-center fill-current h-full mx-2">
+          <button className="flex flex-col justify-center h-full mx-2 fill-current">
             <InstagramIcon />
           </button>
-          <button className="flex flex-col justify-center fill-current h-full mx-2">
+          <button className="flex flex-col justify-center h-full mx-2 fill-current">
             <PinterestIcon />
           </button>
         </section>
-        <form className="w-full max-w-sm order-1 sm:order-2 px-4 sm:p-0">
-          <div className="flex items-center border-b border-gray-700 py-2">
+        <form className="order-1 w-full max-w-sm px-4 sm:order-2 sm:p-0">
+          <div className="flex items-center py-2 border-b border-gray-700">
             <input
-              className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+              className="w-full px-2 py-1 mr-3 leading-tight text-gray-700 bg-transparent border-none appearance-none focus:outline-none"
               type="text"
               placeholder="Your Email Address"
               aria-label="Email Address"
             />
             <button
-              className="flex-shrink-0 border-transparent border-4 text-gray-700 hover:text-gray-800 text-xs font-semibold uppercase py-1 px-2 rounded"
+              className="flex-shrink-0 px-2 py-1 text-xs font-semibold text-gray-700 uppercase border-4 border-transparent rounded hover:text-gray-800"
               type="button"
             >
               Subscribe
@@ -262,8 +262,8 @@ function FooterNavList({
 }) {
   return (
     <section>
-      <h2 className="font-bold text-lg">{title}</h2>
-      <ul className="font-medium text-sm mt-2">
+      <h2 className="text-lg font-bold">{title}</h2>
+      <ul className="mt-2 text-sm font-medium">
         {routes.map((route, index) => (
           <li key={index} className="mb-2">
             <a href={route.route}>{route.label}</a>

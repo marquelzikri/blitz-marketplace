@@ -76,9 +76,9 @@ function HorizontalProducts({ title, url }: { title: string; url: string }) {
             "flex justify-center": hasCarouselRendered,
           })}
         >
-          <div className="absolute flex h-8 justify-center left-0 top-0 w-full">
+          <div className="absolute top-0 left-0 flex justify-center w-full h-8">
             <div className="w-full max-w-5xl pl-4 sm:px-0">
-              <h1 className="text-sm text-gray-700 font-black uppercase">{title}</h1>
+              <h1 className="text-sm font-black text-gray-700 uppercase">{title}</h1>
             </div>
           </div>
           {loading ? <span>Loading...</span> : null}
@@ -206,34 +206,34 @@ function ProductModal({
   return (
     <>
       <div
-        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+        className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none"
         onClick={() => setModalData(null)}
         role="button"
         aria-hidden="true"
       >
-        <div className="relative w-auto my-6 mx-auto max-w-3xl">
+        <div className="relative w-auto max-w-3xl mx-auto my-6">
           {/*content*/}
-          <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+          <div className="relative flex flex-col w-full bg-white border-0 rounded-lg shadow-lg outline-none focus:outline-none">
             {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
+            <div className="flex items-start justify-between p-5 border-b border-gray-300 border-solid rounded-t">
               <h3 className="text-3xl font-semibold">{name}</h3>
               <button
-                className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                className="float-right p-1 ml-auto text-3xl font-semibold leading-none text-black bg-transparent border-0 outline-none opacity-5 focus:outline-none"
                 onClick={() => setModalData(null)}
               >
-                <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                <span className="block w-6 h-6 text-2xl text-black bg-transparent outline-none opacity-5 focus:outline-none">
                   ×
                 </span>
               </button>
             </div>
             {/*body*/}
-            <div className="relative p-6 flex-auto">
-              <img className="h-full object-cover" src={imgUrl} alt={`${name} thumbnail`} />
+            <div className="relative flex-auto p-6">
+              <img className="object-cover h-full" src={imgUrl} alt={`${name} thumbnail`} />
             </div>
           </div>
         </div>
       </div>
-      <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
   )
 }
