@@ -1,5 +1,5 @@
 import getCurrentUser from "app/users/queries/getCurrentUser"
-import { AuthorizationError, resolver } from "blitz"
+import { AuthenticationError, AuthorizationError, resolver } from "blitz"
 import db from "db"
 
 import { UpdateAddress } from "../validations"
@@ -9,6 +9,7 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, ...data }, ctx) => {
     const user = await getCurrentUser(null, ctx)
+    if (!user) throw new AuthenticationError()
 
     const address = await db.address.findUnique({ where: { id } })
     if (!address) throw new Error("Address not found")
