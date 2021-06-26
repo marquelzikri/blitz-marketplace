@@ -1,60 +1,61 @@
 import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import { useRouter, useQuery, useMutation, BlitzPage, Routes } from "blitz"
+import ProfileLayout from "app/components/ProfileLayout"
 import getOrganization from "app/organizations/queries/getOrganization"
-import deleteOrganization from "app/organizations/mutations/deleteOrganization"
+import updateOrganization from "app/organizations/mutations/updateOrganization"
+import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
+import { UpdateOrganization } from "app/organizations/validations"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
-export const Organization = () => {
+export const EditOrganization = () => {
   const currentUser = useCurrentUser()
   const router = useRouter()
 
-  const membership = currentUser.memberships?.find((membership) => membership.isDefault)
-  if (!membership) router.push("/store/new")
+  const membership = currentUser?.memberships?.find((membership) => membership.isDefault)
+  if (!membership) router.push(Routes.NewStorePage())
 
-  const [deleteOrganizationMutation] = useMutation(deleteOrganization)
-  const [organization] = useQuery(getOrganization, { id: membership?.organizationId })
+  const [organization, { setQueryData }] = useQuery(getOrganization, {
+    id: membership?.organizationId,
+  })
+  const [updateOrganizationMutation] = useMutation(updateOrganization)
 
   return (
-    <>
-      <Head>
-        <title>{organization.name}</title>
-      </Head>
+    <div>
+      <h1>{organization.name}</h1>
 
-      <div>
-        <h1>{organization.name}</h1>
-        <pre>{JSON.stringify(organization, null, 2)}</pre>
-
-        <Link href={Routes.EditStorePage({ organizationId: organization.id })}>
-          <a>Edit</a>
-        </Link>
-
-        <button
-          type="button"
-          onClick={async () => {
-            if (window.confirm("This will be deleted")) {
-              await deleteOrganizationMutation({ id: organization.id })
-              router.push(Routes.OrganizationsPage())
+      <ZodForm
+        submitText="Update Store"
+        schema={UpdateOrganization}
+        initialValues={organization as Partial<{ id: number; description: string; name: string }>}
+        onSubmit={async (values) => {
+          try {
+            const updated = await updateOrganizationMutation({
+              ...{ id: organization.id },
+              ...values,
+            })
+            await setQueryData(updated)
+            router.push(Routes.EditStorePage())
+          } catch (error) {
+            console.error(error)
+            return {
+              [FORM_ERROR]: error.toString(),
             }
-          }}
-          style={{ marginLeft: "0.5rem" }}
-        >
-          Delete
-        </button>
-      </div>
-    </>
+          }
+        }}
+      />
+    </div>
   )
 }
 
-const ShowStoreDashboardPage: BlitzPage = () => {
+const EditStorePage: BlitzPage = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Organization />
+      <EditOrganization />
     </Suspense>
   )
 }
 
-ShowStoreDashboardPage.authenticate = true
-ShowStoreDashboardPage.getLayout = (page) => <Layout>{page}</Layout>
+EditStorePage.authenticate = true
+EditStorePage.getLayout = (page) => <ProfileLayout>{page}</ProfileLayout>
 
-export default ShowStoreDashboardPage
+export default EditStorePage

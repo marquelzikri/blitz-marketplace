@@ -1,28 +1,48 @@
 import { Suspense } from "react"
-import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
+import ProfileLayout from "app/components/ProfileLayout"
 import getAddress from "app/addresses/queries/getAddress"
 import deleteAddress from "app/addresses/mutations/deleteAddress"
+import updateAddress from "app/addresses/mutations/updateAddress"
+import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
+import { UpdateAddress } from "app/addresses/validations"
 
-export const Address = () => {
+export const EditAddress = () => {
   const router = useRouter()
   const addressId = useParam("addressId", "number")
+  const [address, { setQueryData }] = useQuery(getAddress, { id: addressId })
+  const [updateAddressMutation] = useMutation(updateAddress)
   const [deleteAddressMutation] = useMutation(deleteAddress)
-  const [address] = useQuery(getAddress, { id: addressId })
 
   return (
     <>
       <Head>
-        <title>Address Detail</title>
+        <title>Edit Address {address.id}</title>
       </Head>
 
       <div>
-        <h1>Address {address.id}</h1>
-        <pre>{JSON.stringify(address, null, 2)}</pre>
+        <h1>Edit Address: {address.title}</h1>
 
-        <Link href={Routes.EditAddressPage({ addressId: address.id })}>
-          <a>Edit</a>
-        </Link>
+        <ZodForm
+          submitText="Update Address"
+          schema={UpdateAddress}
+          initialValues={address}
+          onSubmit={async (values) => {
+            try {
+              const updated = await updateAddressMutation({
+                ...{ id: address.id },
+                ...values,
+              })
+              await setQueryData(updated)
+              router.push(Routes.AddressesPage())
+            } catch (error) {
+              console.error(error)
+              return {
+                [FORM_ERROR]: error.toString(),
+              }
+            }
+          }}
+        />
 
         <button
           type="button"
@@ -32,7 +52,6 @@ export const Address = () => {
               router.push(Routes.AddressesPage())
             }
           }}
-          style={{ marginLeft: "0.5rem" }}
         >
           Delete
         </button>
@@ -41,23 +60,23 @@ export const Address = () => {
   )
 }
 
-const ShowAddressPage: BlitzPage = () => {
+const EditAddressPage: BlitzPage = () => {
   return (
     <div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <EditAddress />
+      </Suspense>
+
       <p>
         <Link href={Routes.AddressesPage()}>
           <a>Addresses</a>
         </Link>
       </p>
-
-      <Suspense fallback={<div>Loading...</div>}>
-        <Address />
-      </Suspense>
     </div>
   )
 }
 
-ShowAddressPage.authenticate = true
-ShowAddressPage.getLayout = (page) => <Layout>{page}</Layout>
+EditAddressPage.authenticate = true
+EditAddressPage.getLayout = (page) => <ProfileLayout>{page}</ProfileLayout>
 
-export default ShowAddressPage
+export default EditAddressPage

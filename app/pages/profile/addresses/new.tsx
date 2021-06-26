@@ -1,6 +1,6 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
 
-import Layout from "app/core/layouts/Layout"
+import ProfileLayout from "app/components/ProfileLayout"
 import createAddress from "app/addresses/mutations/createAddress"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { CreateAddress } from "app/addresses/validations"
@@ -19,7 +19,7 @@ const NewAddressPage: BlitzPage = () => {
         onSubmit={async (values) => {
           try {
             const address = await createAddressMutation(values)
-            router.push(Routes.ShowAddressPage({ addressId: address.id }))
+            router.push(Routes.EditAddressPage({ addressId: address.id }))
           } catch (error) {
             console.error(error)
             return {
@@ -39,6 +39,8 @@ const NewAddressPage: BlitzPage = () => {
 }
 
 NewAddressPage.authenticate = true
-NewAddressPage.getLayout = (page) => <Layout title={"Create New Address"}>{page}</Layout>
+NewAddressPage.getLayout = (page) => (
+  <ProfileLayout title={"Create New Address"}>{page}</ProfileLayout>
+)
 
 export default NewAddressPage

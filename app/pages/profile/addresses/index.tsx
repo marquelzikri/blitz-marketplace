@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import ProfileLayout from "app/components/ProfileLayout"
 import getAddresses from "app/addresses/queries/getAddresses"
 
 const ITEMS_PER_PAGE = 100
@@ -22,7 +22,7 @@ export const AddressesList = () => {
       <ul>
         {addresses.map((address) => (
           <li key={address.id}>
-            <Link href={Routes.ShowAddressPage({ addressId: address.id })}>
+            <Link href={Routes.EditAddressPage({ addressId: address.id })}>
               <a>{address.title}</a>
             </Link>
           </li>
@@ -62,6 +62,6 @@ const AddressesPage: BlitzPage = () => {
 }
 
 AddressesPage.authenticate = true
-AddressesPage.getLayout = (page) => <Layout>{page}</Layout>
+AddressesPage.getLayout = (page) => <ProfileLayout>{page}</ProfileLayout>
 
 export default AddressesPage
