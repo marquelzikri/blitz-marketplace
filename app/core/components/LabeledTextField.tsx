@@ -1,4 +1,4 @@
-import { forwardRef, PropsWithoutRef } from "react"
+import { CSSProperties, forwardRef, PropsWithoutRef } from "react"
 import { useField } from "react-final-form"
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
@@ -9,10 +9,11 @@ export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElem
   /** Field type. Doesn't include radio buttons and checkboxes */
   type?: "text" | "password" | "email" | "number"
   outerProps?: PropsWithoutRef<JSX.IntrinsicElements["div"]>
+  invisible?: boolean
 }
 
 export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldProps>(
-  ({ name, label, outerProps, ...props }, ref) => {
+  ({ name, label, outerProps, invisible, ...props }, ref) => {
     const {
       input,
       meta: { touched, error, submitError, submitting },
@@ -21,10 +22,14 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     })
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
+    const visibilityStyle: CSSProperties = {
+      visibility: "hidden",
+      position: "absolute",
+    }
 
     return (
       <div {...outerProps}>
-        <label>
+        <label style={{ ...(invisible ? visibilityStyle : {}) }}>
           {label}
           <input {...input} disabled={submitting} {...props} ref={ref} />
         </label>
