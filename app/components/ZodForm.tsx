@@ -26,6 +26,7 @@ export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
                 name={fieldName}
                 label={fieldLabel}
                 placeholder={fieldLabel}
+                invisible={fieldName === "id"}
               />
             )
           })
