@@ -3,14 +3,10 @@ import db from "db"
 
 import { GetOrganization } from "../validations"
 
-export default resolver.pipe(
-  resolver.zod(GetOrganization),
-  resolver.authorize(),
-  async ({ id }) => {
-    const organization = await db.organization.findFirst({ where: { id } })
+export default resolver.pipe(resolver.zod(GetOrganization), async ({ id }) => {
+  const organization = await db.organization.findFirst({ where: { id } })
 
-    if (!organization) throw new NotFoundError()
+  if (!organization) throw new NotFoundError()
 
-    return organization
-  }
-)
+  return organization
+})

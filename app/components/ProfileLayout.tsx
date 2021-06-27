@@ -9,18 +9,27 @@ type ProfileLayoutProps = {
   children: ReactNode
 }
 
-type Route = { label: string; href: string }
+type Route = {
+  label: string
+  href: string
+  isExact?: boolean
+}
 
-const Item = ({ label, href }: Route) => {
+const Item = ({ label, href, isExact }: Route) => {
   const router = useRouter()
+
+  const isActiveRoute = (href: string): boolean => {
+    if (isExact) return href === router.pathname
+    return router.pathname.includes(href)
+  }
 
   return (
     <Link href={href}>
       <a
         className={classnames(
           "flex items-center p-2 my-6 text-gray-600 transition-colors duration-200 rounded-lg hover:text-gray-800 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-600 dark:text-gray-400",
-          { "bg-gray-100": router.pathname.includes(href) },
-          { "bg-white": !router.pathname.includes(href) }
+          { "bg-gray-100": isActiveRoute(href) },
+          { "bg-white": !isActiveRoute(href) }
         )}
       >
         <span className="mx-4 text-lg font-normal">{label}</span>
@@ -34,11 +43,16 @@ const Sidebar = () => {
   const routes: Route[] = [
     {
       label: "My profile",
-      href: "#",
+      href: "/profile",
+      isExact: true,
     },
     {
       label: "Store settings",
       href: "/profile/store",
+    },
+    {
+      label: "My products",
+      href: "/profile/products",
     },
     {
       label: "Adresses",

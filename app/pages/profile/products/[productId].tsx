@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import ProfileLayout from "app/components/ProfileLayout"
 import getProduct from "app/products/queries/getProduct"
 import deleteProduct from "app/products/mutations/deleteProduct"
 
@@ -29,7 +29,7 @@ export const Product = () => {
           onClick={async () => {
             if (window.confirm("This will be deleted")) {
               await deleteProductMutation({ id: product.id })
-              router.push(Routes.ProductsPage())
+              router.push(Routes.ShowMyProductsPage())
             }
           }}
           style={{ marginLeft: "0.5rem" }}
@@ -45,7 +45,7 @@ const ShowProductPage: BlitzPage = () => {
   return (
     <div>
       <p>
-        <Link href={Routes.ProductsPage()}>
+        <Link href={Routes.ShowMyProductsPage()}>
           <a>Products</a>
         </Link>
       </p>
@@ -58,6 +58,6 @@ const ShowProductPage: BlitzPage = () => {
 }
 
 ShowProductPage.authenticate = true
-ShowProductPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowProductPage.getLayout = (page) => <ProfileLayout>{page}</ProfileLayout>
 
 export default ShowProductPage

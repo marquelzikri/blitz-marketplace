@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { Head, Link, usePaginatedQuery, useRouter, BlitzPage } from "blitz"
+import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getOrganizations from "app/organizations/queries/getOrganizations"
 
@@ -22,7 +22,7 @@ export const OrganizationsList = () => {
       <ul>
         {organizations.map((organization) => (
           <li key={organization.id}>
-            <Link href={`/stores/${organization.id}`}>
+            <Link href={Routes.ShowOrganizationPage({ organizationId: organization.id })}>
               <a>{organization.name}</a>
             </Link>
           </li>
@@ -55,7 +55,6 @@ const OrganizationsPage: BlitzPage = () => {
   )
 }
 
-OrganizationsPage.authenticate = true
 OrganizationsPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default OrganizationsPage

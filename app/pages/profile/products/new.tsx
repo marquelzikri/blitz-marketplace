@@ -1,5 +1,5 @@
 import { Link, useRouter, useMutation, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import ProfileLayout from "app/components/ProfileLayout"
 import createProduct from "app/products/mutations/createProduct"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { CreateProduct } from "app/products/validations"
@@ -18,7 +18,7 @@ const NewProductPage: BlitzPage = () => {
         onSubmit={async (values) => {
           try {
             const product = await createProductMutation(values)
-            router.push(`/products/${product.id}`)
+            router.push(Routes.ShowProductPage({ productId: product.id }))
           } catch (error) {
             console.error(error)
             return {
@@ -29,7 +29,7 @@ const NewProductPage: BlitzPage = () => {
       />
 
       <p>
-        <Link href={Routes.ProductsPage()}>
+        <Link href={Routes.ShowMyProductsPage()}>
           <a>Products</a>
         </Link>
       </p>
@@ -38,6 +38,8 @@ const NewProductPage: BlitzPage = () => {
 }
 
 NewProductPage.authenticate = true
-NewProductPage.getLayout = (page) => <Layout title={"Create New Product"}>{page}</Layout>
+NewProductPage.getLayout = (page) => (
+  <ProfileLayout title={"Create New Product"}>{page}</ProfileLayout>
+)
 
 export default NewProductPage

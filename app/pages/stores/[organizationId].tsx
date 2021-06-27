@@ -37,7 +37,6 @@ const ShowOrganizationPage: BlitzPage = () => {
   )
 }
 
-ShowOrganizationPage.authenticate = true
 ShowOrganizationPage.getLayout = (page) => <Layout>{page}</Layout>
 
 export default ShowOrganizationPage

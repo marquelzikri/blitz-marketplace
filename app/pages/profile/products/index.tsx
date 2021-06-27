@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { Head, Link, usePaginatedQuery, useRouter, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import ProfileLayout from "app/components/ProfileLayout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import getProducts from "app/products/queries/getProducts"
 
@@ -43,7 +43,7 @@ export const ProductsList = () => {
   )
 }
 
-const ProductsPage: BlitzPage = () => {
+const ShowMyProductsPage: BlitzPage = () => {
   return (
     <>
       <Head>
@@ -65,7 +65,7 @@ const ProductsPage: BlitzPage = () => {
   )
 }
 
-ProductsPage.authenticate = true
-ProductsPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowMyProductsPage.authenticate = true
+ShowMyProductsPage.getLayout = (page) => <ProfileLayout>{page}</ProfileLayout>
 
-export default ProductsPage
+export default ShowMyProductsPage

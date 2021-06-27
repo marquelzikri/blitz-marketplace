@@ -1,6 +1,6 @@
 import { Suspense } from "react"
 import { Head, Link, useRouter, useQuery, useMutation, useParam, BlitzPage, Routes } from "blitz"
-import Layout from "app/core/layouts/Layout"
+import ProfileLayout from "app/components/ProfileLayout"
 import getProduct from "app/products/queries/getProduct"
 import updateProduct from "app/products/mutations/updateProduct"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
@@ -57,7 +57,7 @@ const EditProductPage: BlitzPage = () => {
       </Suspense>
 
       <p>
-        <Link href={Routes.ProductsPage()}>
+        <Link href={Routes.ShowMyProductsPage()}>
           <a>Products</a>
         </Link>
       </p>
@@ -66,6 +66,6 @@ const EditProductPage: BlitzPage = () => {
 }
 
 EditProductPage.authenticate = true
-EditProductPage.getLayout = (page) => <Layout>{page}</Layout>
+EditProductPage.getLayout = (page) => <ProfileLayout>{page}</ProfileLayout>
 
 export default EditProductPage

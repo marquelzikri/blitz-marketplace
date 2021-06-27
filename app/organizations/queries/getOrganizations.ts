@@ -5,7 +5,6 @@ interface GetOrganizationsInput
   extends Pick<Prisma.OrganizationFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
 
 export default resolver.pipe(
-  resolver.authorize(),
   async ({ where, orderBy, skip = 0, take = 100 }: GetOrganizationsInput, ctx) => {
     const {
       items: organizations,
