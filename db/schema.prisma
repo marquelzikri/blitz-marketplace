@@ -130,10 +130,9 @@ model Variant {
   product   Product @relation(fields: [productId], references: [id])
   productId Int
 
-  sku String
   // SKU variant
-
-  color String
+  sku   String
+  stock Int
 
   // Dimension
   length Float
@@ -141,6 +140,7 @@ model Variant {
   height Float
 
   weight Float
+  color  String
 
   ratings Rating[]
 }
