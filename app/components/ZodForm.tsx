@@ -13,7 +13,6 @@ export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
     Object.keys(schema["shape"]).map((fieldName) => renderField(schema, fieldName))
 
   const getFieldType = (obj: any) => {
-    console.log(obj)
     switch (obj?.constructor) {
       case ZodDate:
       case ZodString:

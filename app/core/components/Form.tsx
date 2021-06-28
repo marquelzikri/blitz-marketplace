@@ -1,5 +1,6 @@
 import { ReactNode, PropsWithoutRef } from "react"
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
+import arrayMutators from "final-form-arrays"
 import { z } from "zod"
 export { FORM_ERROR } from "final-form"
 
@@ -34,6 +35,10 @@ export function Form<S extends z.ZodType<any, any>>({
         }
       }}
       onSubmit={onSubmit}
+      mutators={{
+        // potentially other mutators could be merged here
+        ...arrayMutators,
+      }}
       render={({ handleSubmit, submitting, submitError }) => (
         <form onSubmit={handleSubmit} className="form" {...props}>
           {/* Form fields supplied as children are rendered here */}
