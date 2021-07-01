@@ -1,12 +1,19 @@
 import { Suspense } from "react"
-import { BlitzPage } from "blitz"
+import { BlitzPage, usePaginatedQuery } from "blitz"
 
 import Layout from "app/core/layouts/Layout"
 
 import BrandHeader from "app/components/BrandHeader"
 import HorizontalProducts from "app/components/HorizontalProducts"
 
+import getCategories from "app/categories/queries/getCategories"
+
 const Home: BlitzPage = () => {
+  const [{ categories }] = usePaginatedQuery(getCategories, {
+    orderBy: { id: "asc" },
+    take: 4,
+  })
+
   return (
     <div
       className="overflow-x-hidden"
@@ -16,18 +23,9 @@ const Home: BlitzPage = () => {
     >
       <BrandHeader />
       <Suspense fallback="Loading products...">
-        <HorizontalProducts
-          title="Popular in Women"
-          url="https://files.sirclocdn.xyz/frontend-test-37/men-products.json"
-        />
-        <HorizontalProducts
-          title="Popular in Men"
-          url="https://files.sirclocdn.xyz/frontend-test-37/women-products.json"
-        />
-        <HorizontalProducts
-          title="Popular in Accessories"
-          url="https://files.sirclocdn.xyz/frontend-test-37/accessories-products.json"
-        />
+        {categories?.map(({ id, name }) => (
+          <HorizontalProducts key={id} title={`Popular in ${name}`} category={name} />
+        ))}
       </Suspense>
     </div>
   )

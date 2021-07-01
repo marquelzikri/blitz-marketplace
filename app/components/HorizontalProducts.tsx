@@ -1,15 +1,30 @@
-import React, { useEffect, useState } from "react"
+import { useQuery } from "blitz"
 import Carousel from "react-multi-carousel"
-import classNames from "classnames"
 
-import useFetch from "../utils/useFetch"
 import ProductCard from "./ProductCard"
 
-function HorizontalProducts({ title, url }: { title: string; url: string }) {
-  const [modalData, setModalData] = useState<{ name: string; imgUrl: string } | null>(null)
-  const [hasCarouselRendered, setHasCarouselRendered] = useState(false)
+import getProducts from "app/products/queries/getProducts"
 
-  let [response, loading, hasError] = useFetch({ url })
+const ITEMS_PER_SECTION = 20
+
+function HorizontalProducts({ title, category }: { title: string; category: string }) {
+  const [{ products }, { isLoading, isError }] = useQuery(getProducts, {
+    orderBy: { id: "asc" },
+    take: ITEMS_PER_SECTION,
+    where: { categories: { some: { name: category } } },
+    select: {
+      id: true,
+      sku: true,
+      title: true,
+      description: true,
+      organization: true,
+      organizationId: true,
+      categories: true,
+      variants: true,
+      ratings: true,
+      permalink: true,
+    },
+  })
 
   const responsive = {
     desktop: {
@@ -26,64 +41,18 @@ function HorizontalProducts({ title, url }: { title: string; url: string }) {
     },
   }
 
-  if (hasError) {
-    response = {
-      products: [
-        {
-          name: "Men Product 1",
-          image_file:
-            "https://images.unsplash.com/photo-1549989476-69a92fa57c36?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-        },
-        {
-          name: "Men Product 2",
-          image_file:
-            "https://images.unsplash.com/photo-1550133730-695473e544be?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-        },
-        {
-          name: "Men Product 3",
-          image_file:
-            "https://images.unsplash.com/photo-1550167164-1b67c2be3973?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-        },
-        {
-          name: "Men Product 4",
-          image_file:
-            "https://images.unsplash.com/photo-1550223640-23097fc71cb2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-        },
-        {
-          name: "Men Product 5",
-          image_file:
-            "https://images.unsplash.com/photo-1550353175-a3611868086b?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60",
-        },
-      ],
-    }
-
-    hasError = null
-  }
-
-  useEffect(() => {
-    if (response?.products) {
-      setTimeout(() => {
-        setHasCarouselRendered(true)
-      }, 100)
-    }
-  }, [response])
-
   return (
     <>
       <section className="relative flex justify-center w-screen px-4 my-8">
-        <div
-          className={classNames("w-full max-w-6xl pt-8 px-4 sm:px-0 relative", {
-            "flex justify-center": hasCarouselRendered,
-          })}
-        >
+        <div className="relative w-full max-w-6xl px-4 pt-8 sm:px-0">
           <div className="absolute top-0 left-0 flex justify-center w-full h-8">
             <div className="w-full max-w-5xl pl-4 sm:px-0">
               <h1 className="text-sm font-black text-gray-700 uppercase">{title}</h1>
             </div>
           </div>
-          {loading ? <span>Loading...</span> : null}
-          {hasError ? <span>Error occured.</span> : null}
-          {response && response.products && response.products.length > 0 ? (
+          {isLoading ? <span>Loading...</span> : null}
+          {isError ? <span>Error occured.</span> : null}
+          {products?.length > 0 ? (
             <Carousel
               partialVisbile={false}
               responsive={responsive}
@@ -94,27 +63,12 @@ function HorizontalProducts({ title, url }: { title: string; url: string }) {
               customLeftArrow={<CustomLeftArrow />}
               customRightArrow={<CustomRightArrow />}
             >
-              {response.products.map((product: any, index: number) => (
-                <ProductCard
-                  key={index}
-                  name={product.name}
-                  category={"kategori"}
-                  price={Math.ceil(Math.random() * (1000000 - 200000)).toLocaleString()}
-                  imgUrl={product.image_file}
-                  // discount={20}
-                  setModalData={setModalData}
-                />
+              {products?.map((product: any) => (
+                <ProductCard key={product.id} {...product} />
               ))}
             </Carousel>
           ) : null}
         </div>
-        {modalData ? (
-          <ProductModal
-            name={modalData.name}
-            imgUrl={modalData.imgUrl}
-            setModalData={setModalData}
-          />
-        ) : null}
       </section>
       <style>{`
         .react-multi-carousel-dot-list {
@@ -190,50 +144,6 @@ function HorizontalProducts({ title, url }: { title: string; url: string }) {
           }
         }
       `}</style>
-    </>
-  )
-}
-
-function ProductModal({
-  name,
-  imgUrl,
-  setModalData,
-}: {
-  name: string
-  imgUrl: string
-  setModalData: Function
-}) {
-  return (
-    <>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center overflow-x-hidden overflow-y-auto outline-none focus:outline-none"
-        onClick={() => setModalData(null)}
-        role="button"
-        aria-hidden="true"
-      >
-        <div className="relative w-auto max-w-3xl mx-auto my-6">
-          {/*content*/}
-          <div className="relative flex flex-col w-full bg-white border-0 rounded-lg shadow-lg outline-none focus:outline-none">
-            {/*header*/}
-            <div className="flex items-start justify-between p-5 border-b border-gray-300 border-solid rounded-t">
-              <h3 className="text-3xl font-semibold">{name}</h3>
-              <button
-                className="float-right p-1 ml-auto text-3xl font-semibold leading-none text-black bg-transparent border-0 outline-none opacity-5 focus:outline-none"
-                onClick={() => setModalData(null)}
-              >
-                <span className="block w-6 h-6 text-2xl text-black bg-transparent outline-none opacity-5 focus:outline-none">
-                  ×
-                </span>
-              </button>
-            </div>
-            {/*body*/}
-            <div className="relative flex-auto p-6">
-              <img className="object-cover h-full" src={imgUrl} alt={`${name} thumbnail`} />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="fixed inset-0 z-40 bg-black opacity-25"></div>
     </>
   )
 }
