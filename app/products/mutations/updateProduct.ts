@@ -9,8 +9,7 @@ export default resolver.pipe(
   resolver.authorize(),
   async ({ id, ...data }, ctx) => {
     const organization = await getCurrentUserDefaultOrganization(ctx)
-    const variantsInput = data.variants
-    const { variants, ...productInput } = data
+    const { categories, variants, ...productInput } = data
 
     // Check product availability & its ownership
     const product = await db.product.findUnique({ where: { id } })
@@ -21,7 +20,7 @@ export default resolver.pipe(
 
     let variantTransactions: Prisma.Prisma__VariantClient<Variant>[] = []
     let productTransactions: Prisma.Prisma__ProductClient<Product>[] = []
-    for (const variant of variantsInput) {
+    for (const variant of variants) {
       if (variant.id)
         variantTransactions.push(db.variant.update({ where: { id: variant.id }, data: variant }))
       else
@@ -30,7 +29,21 @@ export default resolver.pipe(
         )
     }
 
-    productTransactions.push(db.product.update({ where: { id }, data: { ...productInput } }))
+    let categoriesInput: Prisma.Enumerable<Prisma.CategoryCreateOrConnectWithoutProductsInput> = []
+    for (const category of categories) {
+      const name = category.name.toLowerCase()
+      categoriesInput.push({ where: { name }, create: { name } })
+    }
+
+    productTransactions.push(
+      db.product.update({
+        where: { id },
+        data: {
+          ...productInput,
+          categories: { connectOrCreate: categoriesInput },
+        },
+      })
+    )
 
     const result = await db.$transaction([...variantTransactions, ...productTransactions])
 

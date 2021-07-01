@@ -10,6 +10,7 @@ export const CreateProduct = z.object({
       z.object({
         sku: z.string(),
         stock: z.number(),
+        price: z.number(),
         color: z.string(),
         length: z.number(),
         width: z.number(),
@@ -18,6 +19,11 @@ export const CreateProduct = z.object({
       })
     )
     .nonempty(),
+  categories: z.array(
+    z.object({
+      name: z.string(),
+    })
+  ),
 })
 
 export const DeleteProduct = z.object({
@@ -36,6 +42,7 @@ export const UpdateProduct = z.object({
         id: z.number().optional(),
         sku: z.string(),
         stock: z.number(),
+        price: z.number(),
         color: z.string(),
         length: z.number(),
         width: z.number(),
@@ -44,6 +51,11 @@ export const UpdateProduct = z.object({
       })
     )
     .nonempty(),
+  categories: z.array(
+    z.object({
+      name: z.string(),
+    })
+  ),
 })
 
 export const GetProduct = z.object({

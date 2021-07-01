@@ -1,5 +1,5 @@
 import { resolver } from "blitz"
-import db from "db"
+import db, { Prisma } from "db"
 
 import getCurrentUserDefaultOrganization from "app/users/queries/getCurrentUserDefaultOrganization"
 
@@ -10,14 +10,20 @@ export default resolver.pipe(
   resolver.authorize(),
   async (input, ctx) => {
     const organization = await getCurrentUserDefaultOrganization(ctx)
-    const variantsInput = input.variants
-    const { variants, ...productInput } = input
+    const { categories, variants, ...productInput } = input
+
+    let categoriesInput: Prisma.Enumerable<Prisma.CategoryCreateOrConnectWithoutProductsInput> = []
+    for (const category of categories) {
+      const name = category.name.toLowerCase()
+      categoriesInput.push({ where: { name }, create: { name } })
+    }
 
     const product = await db.product.create({
       data: {
         ...productInput,
         organization: { connect: { id: organization.id } },
-        variants: { create: variantsInput },
+        variants: { create: variants },
+        categories: { connectOrCreate: categoriesInput },
       },
     })
 
