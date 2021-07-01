@@ -9,18 +9,17 @@ import { UpdateProduct } from "app/products/validations"
 export const EditProduct = () => {
   const router = useRouter()
   const productId = useParam("productId", "number")
-  const [product, { setQueryData }] = useQuery(getProduct, { id: productId })
+  const [product] = useQuery(getProduct, { id: productId })
   const [updateProductMutation] = useMutation(updateProduct)
 
   return (
     <>
       <Head>
-        <title>Edit Product {product.id}</title>
+        <title>{product.title}</title>
       </Head>
 
       <div>
-        <h1>Edit Product {product.id}</h1>
-        <pre>{JSON.stringify(product)}</pre>
+        <h1>{product.title}</h1>
 
         <ZodForm
           submitText="Update Product"
@@ -34,7 +33,6 @@ export const EditProduct = () => {
                 ...{ id: product.id },
                 ...values,
               })
-              await setQueryData(updated)
               router.push(Routes.ShowProductPage({ productId: updated.id }))
             } catch (error) {
               console.error(error)

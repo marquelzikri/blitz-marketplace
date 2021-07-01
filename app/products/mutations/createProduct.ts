@@ -10,9 +10,15 @@ export default resolver.pipe(
   resolver.authorize(),
   async (input, ctx) => {
     const organization = await getCurrentUserDefaultOrganization(ctx)
+    const variantsInput = input.variants
+    const { variants, ...productInput } = input
 
     const product = await db.product.create({
-      data: { ...input, organization: { connect: { id: organization.id } } },
+      data: {
+        ...productInput,
+        organization: { connect: { id: organization.id } },
+        variants: { create: variantsInput },
+      },
     })
 
     return product
