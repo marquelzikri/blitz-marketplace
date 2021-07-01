@@ -113,6 +113,7 @@ model Product {
   // SKU Agregator
   title       String
   description String?
+  price       Float
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int

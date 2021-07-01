@@ -11,6 +11,7 @@ export default resolver.pipe(resolver.zod(GetProduct), resolver.authorize(), asy
       sku: true,
       title: true,
       categories: true,
+      price: true,
       description: true,
       ratings: true,
       variants: true,

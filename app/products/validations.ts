@@ -4,6 +4,7 @@ export const CreateProduct = z.object({
   title: z.string(),
   sku: z.string(),
   description: z.string().optional(),
+  price: z.number(),
   variants: z
     .array(
       z.object({
@@ -28,6 +29,7 @@ export const UpdateProduct = z.object({
   title: z.string(),
   sku: z.string(),
   description: z.string(),
+  price: z.number(),
   variants: z
     .array(
       z.object({
