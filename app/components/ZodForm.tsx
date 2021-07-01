@@ -62,7 +62,7 @@ export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
         name={parentField ? `${parentField}.${fieldName}` : fieldName}
         label={fieldLabel}
         placeholder={fieldLabel}
-        // outerProps={{ style: { ...(fieldName === "id" ? visibilityStyle : {}) } }}
+        outerProps={{ style: { ...(fieldName === "id" ? visibilityStyle : {}) } }}
       />
     )
   }
@@ -77,7 +77,7 @@ export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
     const type = getFieldType(field)
     if (type === "array") {
       return (
-        <FieldArray key="fieldName" name={fieldName}>
+        <FieldArray key={fieldName} name={fieldName}>
           {({ fields }) => (
             <div>
               <div className="flex justify-center">
