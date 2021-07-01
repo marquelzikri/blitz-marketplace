@@ -48,10 +48,12 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
     )
   }
 
+  const roles = user.memberships.map((membership) => membership.role)
   const orgIds = user.memberships.map((membership) => membership.organizationId)
 
   await ctx.session.$create({
     userId: user.id,
+    roles,
     orgIds,
   })
   return user

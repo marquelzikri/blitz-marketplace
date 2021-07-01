@@ -32,12 +32,14 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
 export default resolver.pipe(resolver.zod(Login), async ({ email, password }, ctx) => {
   // This throws an error if credentials are invalid
   const user = await authenticateUser(email, password)
+  const roles = user.memberships.map((membership) => membership.role)
   const orgIds = user.memberships.map((membership) => membership.organizationId)
 
   if (!user.memberships[0]) throw new AuthenticationError()
 
   await ctx.session.$create({
     userId: user.id,
+    roles,
     orgIds,
   })
 
