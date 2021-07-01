@@ -20,6 +20,7 @@ export default resolver.pipe(resolver.zod(Signup), async ({ email, password }, c
     organization = await db.organization.create({
       data: {
         name: storeName,
+        permalink: storeName.toLowerCase().split(" ").join("_"),
       },
     })
   }

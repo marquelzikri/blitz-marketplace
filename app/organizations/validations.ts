@@ -3,6 +3,7 @@ import { z } from "zod"
 export const CreateOrganization = z.object({
   name: z.string(),
   description: z.string(),
+  permalink: z.string(),
 })
 
 export const DeleteOrganization = z.object({
@@ -16,5 +17,6 @@ export const UpdateOrganization = z.object({
 })
 
 export const GetOrganization = z.object({
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.number().optional(),
+  permalink: z.string().optional(),
 })
