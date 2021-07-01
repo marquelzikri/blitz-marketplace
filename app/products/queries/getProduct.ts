@@ -3,18 +3,18 @@ import db from "db"
 
 import { GetProduct } from "../validations"
 
-export default resolver.pipe(resolver.zod(GetProduct), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetProduct), async ({ id, permalink }) => {
   const product = await db.product.findFirst({
-    where: { id },
+    where: { id, permalink },
     select: {
       id: true,
       sku: true,
       title: true,
       categories: true,
-      price: true,
       description: true,
       ratings: true,
       variants: true,
+      permalink: true,
     },
   })
 

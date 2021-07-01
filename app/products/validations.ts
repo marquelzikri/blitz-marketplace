@@ -4,7 +4,7 @@ export const CreateProduct = z.object({
   title: z.string(),
   sku: z.string(),
   description: z.string().optional(),
-  price: z.number(),
+  permalink: z.string(),
   variants: z
     .array(
       z.object({
@@ -29,7 +29,7 @@ export const UpdateProduct = z.object({
   title: z.string(),
   sku: z.string(),
   description: z.string(),
-  price: z.number(),
+  permalink: z.string(),
   variants: z
     .array(
       z.object({
@@ -47,5 +47,6 @@ export const UpdateProduct = z.object({
 })
 
 export const GetProduct = z.object({
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.number().optional(),
+  permalink: z.string().optional(),
 })
