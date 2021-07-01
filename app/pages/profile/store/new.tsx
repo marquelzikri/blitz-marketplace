@@ -11,7 +11,7 @@ const NewStorePage: BlitzPage = () => {
   const [createOrganizationMutation] = useMutation(createOrganization)
 
   const membership = currentUser?.memberships?.find((membership) => membership.isDefault)
-  if (!membership) router.push(Routes.EditStorePage())
+  if (membership) router.push(Routes.EditStorePage())
 
   return (
     <div>

@@ -21,28 +21,34 @@ export const EditOrganization = () => {
 
   return (
     <div>
-      <h1>{organization.name}</h1>
+      {membership ? (
+        <>
+          <h1>{organization.name}</h1>
 
-      <ZodForm
-        submitText="Update Store"
-        schema={UpdateOrganization}
-        initialValues={organization as Partial<{ id: number; description: string; name: string }>}
-        onSubmit={async (values) => {
-          try {
-            const updated = await updateOrganizationMutation({
-              ...{ id: organization.id },
-              ...values,
-            })
-            await setQueryData(updated)
-            router.push(Routes.EditStorePage())
-          } catch (error) {
-            console.error(error)
-            return {
-              [FORM_ERROR]: error.toString(),
+          <ZodForm
+            submitText="Update Store"
+            schema={UpdateOrganization}
+            initialValues={
+              organization as Partial<{ id: number; description: string; name: string }>
             }
-          }
-        }}
-      />
+            onSubmit={async (values) => {
+              try {
+                const updated = await updateOrganizationMutation({
+                  ...{ id: organization.id },
+                  ...values,
+                })
+                await setQueryData(updated)
+                router.push(Routes.EditStorePage())
+              } catch (error) {
+                console.error(error)
+                return {
+                  [FORM_ERROR]: error.toString(),
+                }
+              }
+            }}
+          />
+        </>
+      ) : null}
     </div>
   )
 }
