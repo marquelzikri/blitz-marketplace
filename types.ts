@@ -1,5 +1,5 @@
 import { DefaultCtx, SessionContext, SimpleRolesIsAuthorized } from "blitz"
-import { MembershipRole, Organization, User } from "db"
+import { Organization, User } from "db"
 
 // Note: You should switch to Postgres and then use a DB enum for role type
 export type Role = "ADMIN" | "USER"
@@ -12,7 +12,6 @@ declare module "blitz" {
     isAuthorized: SimpleRolesIsAuthorized<Role>
     PublicData: {
       userId: User["id"]
-      roles: Array<MembershipRole>
       orgIds: Array<Organization["id"]>
     }
   }
