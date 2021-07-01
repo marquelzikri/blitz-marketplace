@@ -164,7 +164,7 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name String
+  name String @unique
 
   parent   Category? @relation(fields: [parentId], references: [id])
   parentId Int?
