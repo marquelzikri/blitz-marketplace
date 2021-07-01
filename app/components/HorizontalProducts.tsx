@@ -13,11 +13,11 @@ function HorizontalProducts({ title, url }: { title: string; url: string }) {
 
   const responsive = {
     desktop: {
-      breakpoint: { max: 3000, min: 1024 },
+      breakpoint: { max: 3000, min: 1090 },
       items: 4,
     },
     tablet: {
-      breakpoint: { max: 1024, min: 464 },
+      breakpoint: { max: 1090, min: 464 },
       items: 4,
     },
     mobile: {
@@ -70,7 +70,7 @@ function HorizontalProducts({ title, url }: { title: string; url: string }) {
 
   return (
     <>
-      <section className="relative flex justify-center w-screen mt-16">
+      <section className="relative flex justify-center w-screen px-4 my-8">
         <div
           className={classNames("w-full max-w-6xl pt-8 px-4 sm:px-0 relative", {
             "flex justify-center": hasCarouselRendered,
