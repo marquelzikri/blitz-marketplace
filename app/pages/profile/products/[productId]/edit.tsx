@@ -5,9 +5,13 @@ import getProduct from "app/products/queries/getProduct"
 import updateProduct from "app/products/mutations/updateProduct"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { UpdateProduct } from "app/products/validations"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 export const EditProduct = () => {
+  const currentUser = useCurrentUser()
   const router = useRouter()
+  const userOwnedStore = currentUser?.memberships?.find((membership) => membership.isDefault)
+  if (!userOwnedStore) router.push(Routes.NewStorePage())
   const productId = useParam("productId", "number")
   const [product] = useQuery(getProduct, { id: productId })
   const [updateProductMutation] = useMutation(updateProduct)

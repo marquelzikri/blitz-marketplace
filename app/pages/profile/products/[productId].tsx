@@ -3,9 +3,13 @@ import { Head, Link, useRouter, useQuery, useParam, BlitzPage, useMutation, Rout
 import ProfileLayout from "app/components/ProfileLayout"
 import getProduct from "app/products/queries/getProduct"
 import deleteProduct from "app/products/mutations/deleteProduct"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 export const Product = () => {
+  const currentUser = useCurrentUser()
   const router = useRouter()
+  const userOwnedStore = currentUser?.memberships?.find((membership) => membership.isDefault)
+  if (!userOwnedStore) router.push(Routes.NewStorePage())
   const productId = useParam("productId", "number")
   const [deleteProductMutation] = useMutation(deleteProduct)
   const [product] = useQuery(getProduct, { id: productId })

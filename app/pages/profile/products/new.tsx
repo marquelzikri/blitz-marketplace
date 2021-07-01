@@ -3,9 +3,13 @@ import ProfileLayout from "app/components/ProfileLayout"
 import createProduct from "app/products/mutations/createProduct"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { CreateProduct } from "app/products/validations"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
 const NewProductPage: BlitzPage = () => {
   const router = useRouter()
+  const currentUser = useCurrentUser()
+  const userOwnedStore = currentUser?.memberships?.find((membership) => membership.isDefault)
+  if (!userOwnedStore) router.push(Routes.NewStorePage())
   const [createProductMutation] = useMutation(createProduct)
 
   return (
