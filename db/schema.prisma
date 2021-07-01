@@ -113,7 +113,6 @@ model Product {
   // SKU Agregator
   title       String
   description String?
-  price       Float
 
   organization   Organization @relation(fields: [organizationId], references: [id])
   organizationId Int
@@ -134,6 +133,7 @@ model Variant {
   // SKU variant
   sku   String
   stock Int
+  price Float
 
   // Dimension
   length Float
