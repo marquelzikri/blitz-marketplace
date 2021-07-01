@@ -166,8 +166,8 @@ model Category {
 
   name String
 
-  parent   Category @relation(fields: [parentId], references: [id])
-  parentId Int
+  parent   Category? @relation(fields: [parentId], references: [id])
+  parentId Int?
 
   Category Category[] @relation("CategoryToCategory")
 
