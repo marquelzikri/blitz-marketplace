@@ -1,11 +1,20 @@
 import { Suspense } from "react"
-import { Head, Link, useQuery, useParam, BlitzPage } from "blitz"
+import { Head, Link, useQuery, useParam, BlitzPage, NotFoundError, useRouter } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import getOrganization from "app/organizations/queries/getOrganization"
 
 export const Organization = () => {
-  const organizationId = useParam("organizationId", "number")
-  const [organization] = useQuery(getOrganization, { id: organizationId })
+  const router = useRouter()
+  const storePermalink = useParam("store", "string")
+  const [organization] = useQuery(
+    getOrganization,
+    { permalink: storePermalink },
+    {
+      onError: (error) => {
+        if (error instanceof NotFoundError) router.push("/404")
+      },
+    }
+  )
 
   return (
     <>
@@ -21,7 +30,7 @@ export const Organization = () => {
   )
 }
 
-const ShowOrganizationPage: BlitzPage = () => {
+const ShowStorePage: BlitzPage = () => {
   return (
     <div>
       <p>
@@ -37,6 +46,6 @@ const ShowOrganizationPage: BlitzPage = () => {
   )
 }
 
-ShowOrganizationPage.getLayout = (page) => <Layout>{page}</Layout>
+ShowStorePage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default ShowOrganizationPage
+export default ShowStorePage
