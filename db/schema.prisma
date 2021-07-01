@@ -14,6 +14,7 @@ generator client {
 
 model Organization {
   id          Int     @id @default(autoincrement())
+  permalink   String  @unique
   name        String
   description String?
 
