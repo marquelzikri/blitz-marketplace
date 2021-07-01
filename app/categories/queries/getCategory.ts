@@ -7,8 +7,7 @@ const GetCategory = z.object({
   id: z.number().optional().refine(Boolean, "Required"),
 })
 
-export default resolver.pipe(resolver.zod(GetCategory), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
+export default resolver.pipe(resolver.zod(GetCategory), async ({ id }) => {
   const category = await db.category.findFirst({ where: { id } })
 
   if (!category) throw new NotFoundError()
