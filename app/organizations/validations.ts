@@ -4,6 +4,7 @@ export const CreateOrganization = z.object({
   name: z.string(),
   description: z.string(),
   permalink: z.string(),
+  addressId: z.number(),
 })
 
 export const DeleteOrganization = z.object({
@@ -14,6 +15,7 @@ export const UpdateOrganization = z.object({
   id: z.number(),
   name: z.string(),
   description: z.string(),
+  addressId: z.number(),
 })
 
 export const GetOrganization = z.object({

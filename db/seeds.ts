@@ -27,6 +27,17 @@ const seed = async () => {
     data: {
       name: storeName,
       permalink: storeName.toLowerCase().split(" ").join("_"),
+      address: {
+        create: {
+          title: "default",
+          city: "default",
+          country: "default",
+          detail: "default",
+          district: "default",
+          postalCode: "default",
+          street: "default",
+        },
+      },
     },
   })
 
@@ -56,6 +67,18 @@ const seed = async () => {
     data: {
       name: "Store 1",
       permalink: "store_1",
+      address: {
+        create: {
+          title: "default",
+          city: "default",
+          country: "default",
+          detail: "default",
+          district: "default",
+          postalCode: "default",
+          street: "default",
+          userId: user.id,
+        },
+      },
     },
   })
   await db.user.update({
