@@ -1,5 +1,6 @@
 import { Suspense } from "react"
 import { Link, useMutation, Routes } from "blitz"
+
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 
@@ -51,16 +52,49 @@ function UserInfo() {
     return (
       <>
         <div>
-          <code>{currentUser.name || currentUser.email}</code>
+          <div className="relative inline-block dropdown">
+            <button className="inline-flex items-center px-4 py-2 font-semibold text-gray-700 bg-gray-300 rounded">
+              <span className="mr-1">{currentUser.name || currentUser.email}</span>
+              <svg
+                className="w-4 h-4 fill-current"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />{" "}
+              </svg>
+            </button>
+            <ul className="absolute z-10 hidden pt-1 text-gray-700 dropdown-menu">
+              <li>
+                <Link href={Routes.ProfileHome()}>
+                  <a className="block w-full px-4 py-2 whitespace-no-wrap bg-gray-200 rounded-t hover:bg-gray-400">
+                    Profile
+                  </a>
+                </Link>
+              </li>
+              {/* <li>
+                <a className="block px-4 py-2 whitespace-no-wrap bg-gray-200 hover:bg-gray-400" href="#">
+                  Center
+                </a>
+              </li> */}
+              <li>
+                <button
+                  className="block px-4 py-2 whitespace-no-wrap bg-gray-200 rounded-b hover:bg-gray-400"
+                  onClick={async () => {
+                    await logoutMutation()
+                  }}
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
-        <button
-          className="button small"
-          onClick={async () => {
-            await logoutMutation()
-          }}
-        >
-          Logout
-        </button>
+
+        <style>{`
+          .dropdown:hover .dropdown-menu {
+            display: block;
+          }
+        `}</style>
       </>
     )
   }

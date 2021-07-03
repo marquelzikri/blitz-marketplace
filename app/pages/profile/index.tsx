@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { useRouter, useQuery, useMutation, BlitzPage, Routes } from "blitz"
+import { useRouter, useQuery, useMutation, BlitzPage } from "blitz"
 import ProfileLayout from "app/components/ProfileLayout"
 
 import getUser from "app/users/queries/getUser"
