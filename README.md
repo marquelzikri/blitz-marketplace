@@ -20,8 +20,8 @@ Ensure the `.env.local` file has required environment variables:
 
 ```
 
-DATABASE_URL=postgresql://<YOUR_DB_USERNAME>@localhost:5432/blitz-commerce
-STORE_NAME=blitz_commerce
+DATABASE_URL=postgresql://<YOUR_DB_USERNAME>@localhost:5432/blitz-marketplace
+STORE_NAME=blitz_marketplace
 
 ```
 
@@ -29,8 +29,8 @@ Ensure the `.env.test.local` file has required environment variables:
 
 ```
 
-DATABASE_URL=postgresql://<YOUR_DB_USERNAME>@localhost:5432/blitz-commerce_test
-STORE_NAME=blitz_commerce
+DATABASE_URL=postgresql://<YOUR_DB_USERNAME>@localhost:5432/blitz-marketplace_test
+STORE_NAME=blitz_marketplace
 
 ```
 
@@ -52,7 +52,7 @@ Here is the starting structure of your app.
 
 ```
 
-blitz-commerce
+blitz-marketplace
 
 ├── app/
 
