@@ -6,6 +6,7 @@ import updateOrganization from "app/organizations/mutations/updateOrganization"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { UpdateOrganization } from "app/organizations/validations"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import getAddresses from "app/addresses/queries/getAddresses"
 
 export const EditOrganization = () => {
   const currentUser = useCurrentUser()
@@ -17,6 +18,10 @@ export const EditOrganization = () => {
   const [organization, { setQueryData }] = useQuery(getOrganization, {
     id: membership?.organizationId,
   })
+
+  const [addresses] = useQuery(getAddresses, {})
+  const addressOptions = addresses?.addresses?.map(({ id, title }) => ({ value: id, label: title }))
+
   const [updateOrganizationMutation] = useMutation(updateOrganization)
 
   return (
@@ -28,6 +33,14 @@ export const EditOrganization = () => {
           <ZodForm
             submitText="Update Store"
             schema={UpdateOrganization}
+            options={{
+              id: { hidden: true },
+              addressId: {
+                type: "select",
+                label: "Address",
+                options: addressOptions,
+              },
+            }}
             initialValues={
               organization as Partial<{ id: number; description: string; name: string }>
             }

@@ -28,6 +28,9 @@ export const EditProduct = () => {
         <ZodForm
           submitText="Update Product"
           schema={UpdateProduct}
+          options={{
+            id: { hidden: true },
+          }}
           initialValues={
             product as Partial<{ id: number; title: string; sku: string; description: string }>
           }

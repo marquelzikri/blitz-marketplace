@@ -1,14 +1,18 @@
-import { useRouter, useMutation, BlitzPage, Routes } from "blitz"
+import { useRouter, useMutation, BlitzPage, Routes, useQuery } from "blitz"
 import ProfileLayout from "app/components/ProfileLayout"
 import createOrganization from "app/organizations/mutations/createOrganization"
 import { ZodForm, FORM_ERROR } from "app/components/ZodForm"
 import { CreateOrganization } from "app/organizations/validations"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import getAddresses from "app/addresses/queries/getAddresses"
 
 const NewStorePage: BlitzPage = () => {
   const currentUser = useCurrentUser()
   const router = useRouter()
   const [createOrganizationMutation] = useMutation(createOrganization)
+
+  const [addresses] = useQuery(getAddresses, {})
+  const addressOptions = addresses?.addresses?.map(({ id, title }) => ({ value: id, label: title }))
 
   const membership = currentUser?.memberships?.find((membership) => membership.isDefault)
   if (membership) router.push(Routes.EditStorePage())
@@ -20,6 +24,14 @@ const NewStorePage: BlitzPage = () => {
       <ZodForm
         submitText="Create Store"
         schema={CreateOrganization}
+        options={{
+          id: { hidden: true },
+          addressId: {
+            type: "select",
+            label: "Address",
+            options: addressOptions,
+          },
+        }}
         onSubmit={async (values) => {
           try {
             await createOrganizationMutation(values)

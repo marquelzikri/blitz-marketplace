@@ -19,6 +19,9 @@ const NewProductPage: BlitzPage = () => {
       <ZodForm
         submitText="Create Product"
         schema={CreateProduct}
+        options={{
+          id: { hidden: true },
+        }}
         onSubmit={async (values) => {
           try {
             const product = await createProductMutation(values)

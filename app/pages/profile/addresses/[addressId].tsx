@@ -26,6 +26,9 @@ export const EditAddress = () => {
         <ZodForm
           submitText="Update Address"
           schema={UpdateAddress}
+          options={{
+            id: { hidden: true },
+          }}
           initialValues={address}
           onSubmit={async (values) => {
             try {

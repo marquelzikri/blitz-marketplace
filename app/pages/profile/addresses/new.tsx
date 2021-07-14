@@ -16,6 +16,9 @@ const NewAddressPage: BlitzPage = () => {
       <ZodForm
         submitText="Create Address"
         schema={CreateAddress}
+        options={{
+          id: { hidden: true },
+        }}
         onSubmit={async (values) => {
           try {
             const address = await createAddressMutation(values)

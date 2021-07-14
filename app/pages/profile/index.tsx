@@ -23,6 +23,9 @@ export const EditUser = () => {
       <ZodForm
         submitText="Update User"
         schema={UpdateUser}
+        options={{
+          id: { hidden: true },
+        }}
         initialValues={user as Partial<{ id: number; name: string; email: string }>}
         onSubmit={async (values) => {
           try {
