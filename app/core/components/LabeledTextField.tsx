@@ -24,33 +24,22 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
 
     return (
       <div {...outerProps}>
-        <label>
+        <label className="flex flex-col justify-between text-sm font-medium leading-5">
           {label}
-          <input {...input} disabled={submitting} {...props} ref={ref} />
+          <input
+            className="block w-full py-2 pl-3 pr-10 mt-1 text-base border border-purple-500 rounded-md shadow-sm focus:outline-none sm:text-sm"
+            {...input}
+            disabled={submitting}
+            {...props}
+            ref={ref}
+          />
         </label>
 
         {touched && normalizedError && (
-          <div role="alert" style={{ color: "red" }}>
+          <div role="alert" className="ml-1 text-xs text-right text-red-700">
             {normalizedError}
           </div>
         )}
-
-        <style jsx>{`
-          label {
-            display: flex;
-            flex-direction: column;
-            align-items: start;
-            font-size: 1rem;
-          }
-          input {
-            font-size: 1rem;
-            padding: 0.25rem 0.5rem;
-            border-radius: 3px;
-            border: 1px solid purple;
-            appearance: none;
-            margin-top: 0.5rem;
-          }
-        `}</style>
       </div>
     )
   }
