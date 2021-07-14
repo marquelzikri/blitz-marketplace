@@ -1,6 +1,5 @@
-import { CSSProperties } from "react"
+import { CSSProperties, DetailedHTMLProps, OptionHTMLAttributes } from "react"
 import {
-  z,
   ZodArray,
   ZodBigInt,
   ZodDate,
@@ -8,20 +7,57 @@ import {
   ZodNumber,
   ZodObject,
   ZodOptional,
+  ZodRawShape,
   ZodString,
+  ZodType,
 } from "zod"
 import { FieldArray } from "react-final-form-arrays"
 
 import { Form, FormProps } from "app/core/components/Form"
+import { LabeledSelectField } from "app/core/components/LabeledSelectField"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
+
+/**
+ * Flatten an object keys
+ * @param obj - Object to flatten
+ * @param prefix - Parent key
+ * @param res
+ */
+const flattenObject = (obj: any, prefix: string = "", res: any = {}) =>
+  Object.entries(obj || {}).reduce((r, [key, val]) => {
+    const k = `${prefix}${key}`
+
+    if (typeof val === "object") {
+      if (typeof Object.values(val || {})[0] === "object") flattenObject(val, `${k}.`, r)
+      else res[k] = val
+    } else {
+      res[k] = val
+    }
+    return r
+  }, res)
 
 export { FORM_ERROR } from "app/core/components/Form"
 
-export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
-  const { schema } = props
+export type Field = {
+  name: string
+  label: string
+  type: string
+  parent: any
+  def: any
+  hidden?: boolean
+  options?: DetailedHTMLProps<OptionHTMLAttributes<HTMLOptionElement>, HTMLOptionElement>[]
+  render?: JSX.Element
+}
 
-  const iterateSchema = (schema: any, parentField?: string) =>
-    Object.keys(schema["shape"]).map((fieldName) => renderField(schema, fieldName, parentField))
+export interface ZodFormOption {
+  [key: string]: any
+}
+
+export function ZodForm<S extends ZodType<any, any>>(
+  props: FormProps<S> & { options?: ZodFormOption }
+) {
+  const { children, schema } = props
+  const options = flattenObject(props.options)
 
   const getFieldType = (obj: any) => {
     switch (obj?.constructor) {
@@ -44,56 +80,63 @@ export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
     }
   }
 
-  const renderInputField = (
-    fieldName: string,
-    type: "number" | "text" | "email" | "password" | undefined,
-    fieldLabel: string,
-    parentField?: string
-  ) => {
-    const visibilityStyle: CSSProperties = {
+  /**
+   * Parse zod object to field array
+   * @param schema - Zod schema(object)
+   * @param parentField - Used for zod array type
+   */
+  const parseZodObject = (schema: ZodObject<ZodRawShape>, parentField?: string) => {
+    if (!schema) return []
+    return Object.keys(schema["shape"]).map((fieldName) => {
+      const field = schema["shape"][fieldName]
+      if (field == null) return null
+
+      let fieldLabel = fieldName.replace(/([A-Z])/g, " $1")
+      fieldLabel = fieldLabel.charAt(0).toUpperCase() + fieldLabel.slice(1)
+
+      const type = getFieldType(field)
+      let parsedField: Field = {
+        type,
+        name: fieldName,
+        label: fieldLabel,
+        parent: parentField,
+        def: field?._def,
+      }
+      if (Object.keys(options).includes(fieldName))
+        parsedField = { ...parsedField, ...options[fieldName] }
+      if (type === "array") parsedField["items"] = parseZodObject(field?._def?.type, fieldName)
+
+      return parsedField
+    })
+  }
+
+  const renderField = ({ name, label, type, parent, def, hidden, options, render }: Field) => {
+    const hiddenStyle: CSSProperties = {
       visibility: "hidden",
       position: "absolute",
     }
 
-    return (
-      <LabeledTextField
-        key={fieldName}
-        type={type}
-        name={parentField ? `${parentField}.${fieldName}` : fieldName}
-        label={fieldLabel}
-        placeholder={fieldLabel}
-        outerProps={{ style: { ...(fieldName === "id" ? visibilityStyle : {}) } }}
-      />
-    )
-  }
+    if (render) return render
 
-  const renderField = (schema: any, fieldName: string, parentField?: string) => {
-    const field = schema["shape"][fieldName]
-    if (field == null) return null
-
-    let fieldLabel = fieldName.replace(/([A-Z])/g, " $1")
-    fieldLabel = fieldLabel.charAt(0).toUpperCase() + fieldLabel.slice(1)
-
-    const type = getFieldType(field)
     if (type === "array") {
       return (
-        <FieldArray key={fieldName} name={fieldName}>
+        <FieldArray key={name} name={name}>
           {({ fields }) => (
             <div>
               <div className="flex justify-center">
-                <span>{fieldLabel}</span>
+                <span>{label}</span>
               </div>
               <hr />
               {fields.map((name, index) => (
                 <div key={name}>
-                  {iterateSchema(field?._def?.type, name)}
+                  {parseZodObject(def?.type, name).map((field) => renderField(field as any))}
                   <button type="button" onClick={() => fields.remove(index)}>
-                    Remove {fieldLabel}
+                    Remove {label}
                   </button>
                 </div>
               ))}
               <button type="button" onClick={() => fields.push({})}>
-                Add {fieldLabel}
+                Add {label}
               </button>
             </div>
           )}
@@ -101,8 +144,38 @@ export function ZodForm<S extends z.ZodType<any, any>>(props: FormProps<S>) {
       )
     }
 
-    return renderInputField(fieldName, type, fieldLabel, parentField)
+    if (type === "select") {
+      return (
+        <LabeledSelectField
+          key={name}
+          type={options ? (typeof options[0]?.value === "string" ? "text" : "number") : "text"}
+          name={parent ? `${parent}.${name}` : name}
+          label={label}
+          options={options || []}
+        />
+      )
+    }
+
+    if (["number", "text", "password", "email"].includes(type)) {
+      return (
+        <LabeledTextField
+          key={name}
+          type={type as "number" | "text" | "password" | "email"}
+          name={parent ? `${parent}.${name}` : name}
+          label={label}
+          placeholder={label}
+          outerProps={{ style: { ...(hidden ? hiddenStyle : {}) } }}
+        />
+      )
+    }
   }
 
-  return <Form<S> {...props}>{schema ? iterateSchema(schema) : null}</Form>
+  const fields = parseZodObject(schema as unknown as ZodObject<ZodRawShape>)
+
+  return (
+    <Form<S> {...props}>
+      {fields ? fields.map((field) => renderField(field as any)) : null}
+      {children}
+    </Form>
+  )
 }
